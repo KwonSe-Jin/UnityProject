@@ -1,0 +1,8 @@
+<레이아웃 초기화> window->layouts->default
+
+Rigidbody 2D : 물리 엔진을 통해 게임 오브젝트에 물리적인 동작(중력, 충돌, 마찰 등)을 적용할 수 있도록 하는 컴포넌트
+Capsule Collider 2D : 물리적 충돌 면을 결정하는 컴포넌트 
+Order in Layer : 우선적으로 그리는 순서
+GetComponent : 컴포넌트를 가져오는 함수
+FixedUpdate : 물리 연산 프레임마다 호출되는 생명주기 함수
+Input.GetAxisRaw : 보정없이 입력 값 반환
