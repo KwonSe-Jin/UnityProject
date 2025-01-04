@@ -6,3 +6,10 @@ Order in Layer : 우선적으로 그리는 순서
 GetComponent : 컴포넌트를 가져오는 함수
 FixedUpdate : 물리 연산 프레임마다 호출되는 생명주기 함수
 Input.GetAxisRaw : 보정없이 입력 값 반환
+CellAnimation : 스프라이트 시트의 이미지를 순차적으로 보여주는 방식
+
+
+Animation Controller 
+Has Exit Time : 애니메이션 상태가 끝날 때까지 대기한 후 전환이 이루어지도록 설정하는 옵션
+Has Exit Time 비활성화 : 조건을 만족하는 즉시 트랜지션이 발생합니다. 애니메이션이 끝나지 않아도 다음 상태로 전환될 수 있다.
+Animator Override Controller : Animator Controller를 기반으로 특정 애니메이션 클립을 덮어쓰기(상속과 유사)
