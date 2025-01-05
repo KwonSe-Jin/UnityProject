@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
 
 	void OnMove(InputValue value)
 	{
+		Debug.Log("OnTriggerExit2D called with tag: ");
 		InputVec = value.Get<Vector2>();
 	}
 	void LateUpdate()
