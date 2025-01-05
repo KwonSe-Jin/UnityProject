@@ -13,3 +13,18 @@ Animation Controller
 Has Exit Time : 애니메이션 상태가 끝날 때까지 대기한 후 전환이 이루어지도록 설정하는 옵션
 Has Exit Time 비활성화 : 조건을 만족하는 즉시 트랜지션이 발생합니다. 애니메이션이 끝나지 않아도 다음 상태로 전환될 수 있다.
 Animator Override Controller : Animator Controller를 기반으로 특정 애니메이션 클립을 덮어쓰기(상속과 유사)
+
+타일 그리기
+tile palette 생성 -> 2d(Rule Tile)생성-> 타일 개수 생성 후 스프라이트에서 개수 만큼 채워주기 -> 생성 후 tile palette에 덮어주기 -> 
+그리드 안에서 2d object > tile map > 정사각형 선택 후 -> 배치 후 2d(Rule Tile) 에서 noise로 배치
+
+재배치 (플레이어 카메라 기준으로) 멀어지면 맵 재배치 
+composit collider 2d : 타일마다 나눠진 형태를 하나로 합치는 역할 
+
+player 정보 -> GameManager가 가지고 있을 것 ->reposition에 전달
+
+static 변수 inspector에 나오지 않음
+
+OnTriggerExit2D : collider에서 벗어났을 때
+
+Mathf.Abs : 유니티 c#에서 쓰는 abs 함수
