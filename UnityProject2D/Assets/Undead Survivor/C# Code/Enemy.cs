@@ -3,16 +3,21 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float speed;
+    public float health;
+    public float Maxhealth;
+    public RuntimeAnimatorController[] animController;
     public Rigidbody2D target;
 
-	bool islive = true;
+	bool islive;
 
     Rigidbody2D rigid;
+	Animator anim;
     SpriteRenderer spriteRenderer;
 
     void Awake()
     {
 		rigid = GetComponent<Rigidbody2D>();
+		anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 	}
     void FixedUpdate()
@@ -40,6 +45,17 @@ public class Enemy : MonoBehaviour
 
 	void OnEnable()
 	{
-		target = GameManager.instance.player.GetComponent<Rigidbody2D>();	
+		target = GameManager.instance.player.GetComponent<Rigidbody2D>();
+		islive = true;
+		health = Maxhealth;
+	}
+
+	public void Init(SpawnData data)
+	{
+		// 매개변수의 속성을 몬스터 속성 변경에 활용
+		anim.runtimeAnimatorController = animController[data.spriteType];
+		speed = data.speed;
+		Maxhealth = data.health;
+		health = data.health;
 	}
 }

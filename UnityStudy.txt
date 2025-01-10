@@ -41,3 +41,9 @@ virtual camera ->  follow camera
 	{
 		target = GameManager.instance.player.GetComponent<Rigidbody2D>();	
 	}
+
+ Mathf.FloorToInt 형변환 함수
+ceiltoint : 소수점 아래 올리고 형변환
+
+외부 클래스 위에 직렬화 선언
+[System.Serializable] 을 통해 인스펙터에서 초기화 가능
