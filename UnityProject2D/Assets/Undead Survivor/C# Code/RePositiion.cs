@@ -43,6 +43,7 @@ public class RePosition : MonoBehaviour
 			case "Enemy":
 				if (coll.enabled)
 				{
+					// 몬스터 재배치 ( 플레이어 이동 방향에 따라 맞은편에서 등장)
 					transform.Translate(playerDir * 20 + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0f));
 				}
 				break;

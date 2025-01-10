@@ -34,3 +34,10 @@ Mathf.Abs : 유니티 c#에서 쓰는 abs 함수
 
 unity 2023->
 virtual camera ->  follow camera
+
+에셋과 scene과는 별도 분리된 공간 즉, 프리펩은 장면의 오브젝트를 접근할 수 없음
+생성을 하면서 초기화 시켜줘야 함 
+	void OnEnable()
+	{
+		target = GameManager.instance.player.GetComponent<Rigidbody2D>();	
+	}
