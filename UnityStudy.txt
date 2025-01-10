@@ -1,6 +1,9 @@
 <레이아웃 초기화> window->layouts->default
 
 Rigidbody 2D : 물리 엔진을 통해 게임 오브젝트에 물리적인 동작(중력, 충돌, 마찰 등)을 적용할 수 있도록 하는 컴포넌트
+Rigidbody2D의 Freeze Rotation 옵션은 2D 물리 시스템에서 오브젝트의 회전을 고정시켜줌 (체크)
+
+
 Capsule Collider 2D : 물리적 충돌 면을 결정하는 컴포넌트 
 Order in Layer : 우선적으로 그리는 순서
 GetComponent : 컴포넌트를 가져오는 함수
@@ -28,3 +31,6 @@ static 변수 inspector에 나오지 않음
 OnTriggerExit2D : collider에서 벗어났을 때
 
 Mathf.Abs : 유니티 c#에서 쓰는 abs 함수
+
+unity 2023->
+virtual camera ->  follow camera
