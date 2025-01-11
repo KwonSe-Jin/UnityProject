@@ -47,3 +47,22 @@ ceiltoint : 소수점 아래 올리고 형변환
 
 외부 클래스 위에 직렬화 선언
 [System.Serializable] 을 통해 인스펙터에서 초기화 가능
+
+Physics2D.CircleCastAll(캐스트 시작위치, 원의 반지름, 캐스팅 방향, 캐스팅 길이, 대상 레이어)  = 원형의 캐스트를 쓰고 모든 결과를 반환하는 함수
+
+ Quaternion.FromToRotation : 지정된 축을 중심으로 목표로 향해 회전하는 함수
+
+coroutine : 생명동기와 비동기처럼 실행되는 함수 
+IEnumerator : 코루틴만의 반환형 인터페이스
+yield return 코루틴의 반환 키워드
+
+yield return null; // 1프레임 쉬기;
+yield return new WaitForSeconds(2f); // 2초 쉬기;
+
+startcorutine(실행할 함수) : 코루틴 함수 실행
+
+GetCurrentAnimatorStateInfo() : 현재 상태 정보를 가져오는 함수
+
+rigid.simulated = false; 리지드바디의 물리적 비활성화
+
+[Header] : 인스펙터의 속성들을 이쁘게 구분시켜주는 타이틀

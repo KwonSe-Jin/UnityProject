@@ -5,6 +5,8 @@ public class Player : MonoBehaviour
 {
     public Vector2  InputVec;
     public float    Speed;
+
+	public Scanner scanner;
     Rigidbody2D Rigid;
 	SpriteRenderer SpriteR;
 	Animator Anim;
@@ -14,13 +16,10 @@ public class Player : MonoBehaviour
 		Rigid = GetComponent<Rigidbody2D>();
 		SpriteR = GetComponent<SpriteRenderer>();
 		Anim = GetComponent<Animator>();
+		scanner = GetComponent<Scanner>();
 	}
 
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	void Start()
-    {
-        
-    }
+
 
     // Update is called once per frame
   //  void Update()

@@ -11,7 +11,7 @@ public class RePosition : MonoBehaviour
 	}
 	void OnTriggerExit2D(Collider2D collision)
 	{
-		Debug.Log("OnTriggerExit2D called with tag: " + collision.tag); // 함수 진입 로그
+		
 		if (!collision.CompareTag("Area"))
 			return;
 
