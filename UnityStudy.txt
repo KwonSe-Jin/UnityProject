@@ -66,3 +66,12 @@ GetCurrentAnimatorStateInfo() : 현재 상태 정보를 가져오는 함수
 rigid.simulated = false; 리지드바디의 물리적 비활성화
 
 [Header] : 인스펙터의 속성들을 이쁘게 구분시켜주는 타이틀
+
+reference resolution : 해상도
+slider navigation : ui의 tab 포커싱 순서
+
+TextMesh Pro : 한글로 사용하기 힘듦
+
+set native size = 오브젝트 크기를 스프라이트 원래 크기로 설정
+
+WorldToScreenPoint = 월드 상의 오브젝트 위치를 스크린 좌표로 반환
