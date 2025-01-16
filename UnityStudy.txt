@@ -67,7 +67,7 @@ GetCurrentAnimatorStateInfo() : 현재 상태 정보를 가져오는 함수
 rigid.simulated = false; 리지드바디의 물리적 비활성화
 
 [Header] : 인스펙터의 속성들을 이쁘게 구분시켜주는 타이틀
-
+[TextArea] : 인스펙터에서 여러 줄을 사용할 수 있도록 할 수 있음
 reference resolution : 해상도
 slider navigation : ui의 tab 포커싱 순서
 
@@ -85,3 +85,9 @@ AddComponent<T> 컴포넌트 추가 함수
 
 
 BroadcastMessage : 특정 함수를 같은 게임 오브젝트와 그 자식 오브젝트에 있는 모든 컴포넌트에 **브로드캐스트(알림)**하는 기능을 제공
+
+Control Child Size : 자식 오브젝트를 자신의 크기에 맞춰 자동 변경
+
+localScale = Vector3.one; scale을 1로 설정
+
+Time.timeScale : 유니티 시간 속도

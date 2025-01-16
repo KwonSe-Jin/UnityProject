@@ -32,7 +32,9 @@ public class Player : MonoBehaviour
   //  }
     void FixedUpdate()
 	{
-        Vector2 NextVec = InputVec * Time.fixedDeltaTime * Speed;
+		if (!GameManager.instance.isLive)
+			return;
+		Vector2 NextVec = InputVec * Time.fixedDeltaTime * Speed;
 		// 위치 이동 (현재 위치 + inputVec)
 		Rigid.MovePosition(Rigid.position + NextVec);
         
@@ -40,11 +42,15 @@ public class Player : MonoBehaviour
 
 	void OnMove(InputValue value)
 	{
+		if (!GameManager.instance.isLive)
+			return;
 		Debug.Log("OnTriggerExit2D called with tag: ");
 		InputVec = value.Get<Vector2>();
 	}
 	void LateUpdate()
 	{
+		if (!GameManager.instance.isLive)
+			return;
 		Anim.SetFloat("Speed",InputVec.magnitude);
 		if(InputVec.x != 0)
 		{

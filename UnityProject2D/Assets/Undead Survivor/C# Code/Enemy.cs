@@ -27,6 +27,8 @@ public class Enemy : MonoBehaviour
 	}
 	void FixedUpdate()
 	{
+		if (!GameManager.instance.isLive)
+			return;
 		if (!islive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
 			return;
 		// 타겟 위치 - 내 위치를 계산하여 방향 벡터 
@@ -43,6 +45,8 @@ public class Enemy : MonoBehaviour
 	}
 	void LateUpdate()
 	{
+		if (!GameManager.instance.isLive)
+			return;
 		if (!islive)
 			return;
 		spriteRenderer.flipX = target.position.x < rigid.position.x;
