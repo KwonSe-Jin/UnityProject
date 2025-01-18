@@ -91,3 +91,10 @@ Control Child Size : 자식 오브젝트를 자신의 크기에 맞춰 자동 �
 localScale = Vector3.one; scale을 1로 설정
 
 Time.timeScale : 유니티 시간 속도
+
+OnCollisionEnter2D :유니티에서 2D 물리 충돌이 발생했을 때 호출되는 콜백 함수
+OnCollisionStay2D :  :유니티에서 2D 물리 시스템에서 두 Collider2D가 충돌 중일 때 매 프레임 동안 호출되는 콜백 함수
+transform.childCount:  유니티에서 특정 게임 오브젝트가 가진 자식 오브젝트의 개수
+SceneManager.LoadScene : 이름 혹은 인덱스로 장면을 새롭게 부르는 함수
+인덱스는 File-bulid profiles-Scene List에서 볼수 있음
+Grid Layout Group : 자식 오브젝트를 그리드 형태로 정렬하는 컴포넌트
