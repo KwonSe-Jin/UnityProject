@@ -98,3 +98,9 @@ transform.childCount:  유니티에서 특정 게임 오브젝트가 가진 자�
 SceneManager.LoadScene : 이름 혹은 인덱스로 장면을 새롭게 부르는 함수
 인덱스는 File-bulid profiles-Scene List에서 볼수 있음
 Grid Layout Group : 자식 오브젝트를 그리드 형태로 정렬하는 컴포넌트
+
+PlayerPrefs : 간단한 저장 기능을 제공하는 유니티 제공 클래스
+
+edit - clear all PlayerPrefs : 전의 데이터를 깔끔하게 지워줌
+
+WaitForSecondsRealtime : WaitForSeconds와 달리 Time.timeScale의 영향을 받지 않고 실제 경과 시간을 기준으로 동작
