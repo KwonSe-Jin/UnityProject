@@ -128,7 +128,7 @@ public class Weapon : MonoBehaviour
 			//bullet.Translate(Vector3.up, Space.Self);
 
 			// 총알 초기화 (damage와 -1은 무한 관통을 의미)
-			bullet.GetComponent<Bullet>().Init(damage, -1, Vector3.zero);
+			bullet.GetComponent<Bullet>().Init(damage, -100, Vector3.zero);
 
 		}
 	}
