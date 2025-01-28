@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
 	public LevelUp UIlevelUp;
 	public Result UIResult;
 	public GameObject EnemyCleaner;
+	public NetWorkManager netWorkManager;
 	void Awake()
 	{
 		instance = this;
