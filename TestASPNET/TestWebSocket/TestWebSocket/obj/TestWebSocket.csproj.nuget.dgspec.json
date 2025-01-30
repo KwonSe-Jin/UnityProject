@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\sejin\\OneDrive\\바탕 화면\\TestASPNET\\TestWebSocket\\TestWebSocket\\TestWebSocket.csproj": {}
+    "C:\\Users\\sejin\\Downloads\\UnityProject\\UnityProject\\TestASPNET\\TestWebSocket\\TestWebSocket\\TestWebSocket.csproj": {}
   },
   "projects": {
-    "C:\\Users\\sejin\\OneDrive\\바탕 화면\\TestASPNET\\TestWebSocket\\TestWebSocket\\TestWebSocket.csproj": {
+    "C:\\Users\\sejin\\Downloads\\UnityProject\\UnityProject\\TestASPNET\\TestWebSocket\\TestWebSocket\\TestWebSocket.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\sejin\\OneDrive\\바탕 화면\\TestASPNET\\TestWebSocket\\TestWebSocket\\TestWebSocket.csproj",
+        "projectUniqueName": "C:\\Users\\sejin\\Downloads\\UnityProject\\UnityProject\\TestASPNET\\TestWebSocket\\TestWebSocket\\TestWebSocket.csproj",
         "projectName": "TestWebSocket",
-        "projectPath": "C:\\Users\\sejin\\OneDrive\\바탕 화면\\TestASPNET\\TestWebSocket\\TestWebSocket\\TestWebSocket.csproj",
+        "projectPath": "C:\\Users\\sejin\\Downloads\\UnityProject\\UnityProject\\TestASPNET\\TestWebSocket\\TestWebSocket\\TestWebSocket.csproj",
         "packagesPath": "C:\\Users\\sejin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\sejin\\OneDrive\\바탕 화면\\TestASPNET\\TestWebSocket\\TestWebSocket\\obj\\",
+        "outputPath": "C:\\Users\\sejin\\Downloads\\UnityProject\\UnityProject\\TestASPNET\\TestWebSocket\\TestWebSocket\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

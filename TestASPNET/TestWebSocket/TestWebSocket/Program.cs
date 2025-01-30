@@ -6,8 +6,6 @@ using System.Threading;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// HTTPS를 강제 설정 (기본적으로 HTTPS로 실행)
-builder.WebHost.UseUrls("https://localhost:5001"); // HTTPS로만 실행
 
 var app = builder.Build();
 
@@ -31,24 +29,45 @@ app.Map("/ws", async context =>
         context.Response.StatusCode = 400; // Bad Request (WebSocket이 아닌 요청)
     }
 });
+app.Run(); // 애플리케이션 실행
 
 // WebSocket 메시지 수신 및 처리
 async Task HandleWebSocketAsync(WebSocket webSocket)
 {
     var buffer = new byte[1024 * 4]; // 수신할 메시지 버퍼
+	var cancellationToken = CancellationToken.None;
 
-    while (webSocket.State == WebSocketState.Open)
-    {
-        var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None); // 메시지 수신
-        var message = Encoding.UTF8.GetString(buffer, 0, result.Count); // 메시지 디코딩
+	try
+	{
+		while (webSocket.State == WebSocketState.Open)
+		{
+			// 클라이언트에서 메시지를 수신
+			var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
+			if (result.MessageType == WebSocketMessageType.Close)
+			{
+				await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by client", cancellationToken);
+				Console.WriteLine("Client disconnected.");
+				return;
+			}
 
-        // 수신된 메시지 로그 출력
-        Console.WriteLine($"Message received: {message}");
+			// 받은 데이터 UTF-8 문자열 변환
+			var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+			Console.WriteLine($"Received: {message}");
 
-        // 메시지 처리 후 응답
-        var response = Encoding.UTF8.GetBytes($"Server received: {message}");
-        await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, CancellationToken.None); // 응답 전송
-    }
+			// 클라이언트에게 응답 전송
+			var response = Encoding.UTF8.GetBytes($"Echo: {message}");
+			await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, cancellationToken);
+		}
+	}
+	catch (Exception ex)
+	{
+		Console.WriteLine($"WebSocket error: {ex.Message}");
+	}
+	finally
+	{
+		if (webSocket.State != WebSocketState.Closed)
+			await webSocket.CloseAsync(WebSocketCloseStatus.InternalServerError, "Unexpected error", cancellationToken);
+	}
 }
 
-app.Run(); // 애플리케이션 실행
+
