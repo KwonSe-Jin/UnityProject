@@ -49,3 +49,6 @@ C:\Users\sejin\Downloads\UnityProject\UnityProject\TestASPNET\TestWebSocket\Test
 C:\Users\sejin\Downloads\UnityProject\UnityProject\TestASPNET\TestWebSocket\TestWebSocket\obj\Release\net8.0\TestWebSocket.pdb
 C:\Users\sejin\Downloads\UnityProject\UnityProject\TestASPNET\TestWebSocket\TestWebSocket\obj\Release\net8.0\TestWebSocket.genruntimeconfig.cache
 C:\Users\sejin\Downloads\UnityProject\UnityProject\TestASPNET\TestWebSocket\TestWebSocket\obj\Release\net8.0\ref\TestWebSocket.dll
+C:\Users\sejin\Downloads\UnityProject\UnityProject\TestASPNET\TestWebSocket\TestWebSocket\obj\Release\net8.0\TestWebSocket.csproj.AssemblyReference.cache
+C:\Users\sejin\Downloads\UnityProject\UnityProject\TestASPNET\TestWebSocket\TestWebSocket\bin\Release\net8.0\Newtonsoft.Json.dll
+C:\Users\sejin\Downloads\UnityProject\UnityProject\TestASPNET\TestWebSocket\TestWebSocket\obj\Release\net8.0\TestWebSocket.csproj.CopyComplete

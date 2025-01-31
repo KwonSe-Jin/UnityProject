@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "+rmkmXzJB/csBkhn3wao9MXlXkjE24hMpVzqTda7RMnxn0LZRIc+tKPf8S3IgbDCc2MerNTSx8s/brqHCge15g==",
+  "dgSpecHash": "SLIjB661XbpH8xoAA+vr0SKKuBwOUdbft9olcI6uhmU2O57ZjlaOdewuXbua5YTTMivwzOpT+ooxNwam7PHzAw==",
   "success": true,
   "projectFilePath": "C:\\Users\\sejin\\Downloads\\UnityProject\\UnityProject\\TestASPNET\\TestWebSocket\\TestWebSocket\\TestWebSocket.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\sejin\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

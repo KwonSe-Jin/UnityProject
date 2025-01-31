@@ -1,47 +1,49 @@
-using Microsoft.AspNetCore.Builder;
+ï»¿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
-
+using Newtonsoft.Json; // JSON íŒŒì‹±ì„ ìœ„í•œ ë¼ì´ë¸ŒëŸ¬ë¦¬ ì¶”
+using TestWebSocket;
 var builder = WebApplication.CreateBuilder(args);
 
 
 var app = builder.Build();
 
-app.UseHttpsRedirection(); // HTTPS ¸®µğ·º¼Ç (HTTP -> HTTPS)
+app.UseHttpsRedirection(); // HTTPS ë¦¬ë””ë ‰ì…˜ (HTTP -> HTTPS)
 
-// WebSocketÀ» »ç¿ëÇÒ ¼ö ÀÖµµ·Ï ¼³Á¤
-app.UseWebSockets(); // WebSocketÀ» È°¼ºÈ­
+// WebSocketì„ ì‚¬ìš©í•  ìˆ˜ ìˆë„ë¡ ì„¤ì •
+app.UseWebSockets(); // WebSocketì„ í™œì„±í™”
 
 app.MapGet("/", () => "Hello World!");
 
-// WebSocket °æ·Î Ã³¸®
+// WebSocket ê²½ë¡œ ì²˜ë¦¬
 app.Map("/ws", async context =>
 {
-    if (context.WebSockets.IsWebSocketRequest) // WebSocket ¿äÃ»ÀÎÁö È®ÀÎ
+    if (context.WebSockets.IsWebSocketRequest) // WebSocket ìš”ì²­ì¸ì§€ í™•ì¸
     {
-        WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync(); // WebSocket ¿¬°á ¼ö¶ô
-        await HandleWebSocketAsync(webSocket); // ¿¬°áµÈ WebSocket Ã³¸®
+        WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync(); // WebSocket ì—°ê²° ìˆ˜ë½
+        await HandleWebSocketAsync(webSocket); // ì—°ê²°ëœ WebSocket ì²˜ë¦¬
     }
     else
     {
-        context.Response.StatusCode = 400; // Bad Request (WebSocketÀÌ ¾Æ´Ñ ¿äÃ»)
+        context.Response.StatusCode = 400; // Bad Request (WebSocketì´ ì•„ë‹Œ ìš”ì²­)
     }
 });
-app.Run(); // ¾ÖÇÃ¸®ÄÉÀÌ¼Ç ½ÇÇà
+app.Run(); // ì• í”Œë¦¬ì¼€ì´ì…˜ ì‹¤í–‰
 
-// WebSocket ¸Ş½ÃÁö ¼ö½Å ¹× Ã³¸®
+// WebSocket ë©”ì‹œì§€ ìˆ˜ì‹  ë° ì²˜ë¦¬
 async Task HandleWebSocketAsync(WebSocket webSocket)
 {
-    var buffer = new byte[1024 * 4]; // ¼ö½ÅÇÒ ¸Ş½ÃÁö ¹öÆÛ
+    var buffer = new byte[1024 * 4]; // ìˆ˜ì‹ í•  ë©”ì‹œì§€ ë²„í¼
 	var cancellationToken = CancellationToken.None;
 
 	try
 	{
 		while (webSocket.State == WebSocketState.Open)
 		{
-			// Å¬¶óÀÌ¾ğÆ®¿¡¼­ ¸Ş½ÃÁö¸¦ ¼ö½Å
+			// í´ë¼ì´ì–¸íŠ¸ì—ì„œ ë©”ì‹œì§€ë¥¼ ìˆ˜ì‹ 
 			var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
 			if (result.MessageType == WebSocketMessageType.Close)
 			{
@@ -50,13 +52,25 @@ async Task HandleWebSocketAsync(WebSocket webSocket)
 				return;
 			}
 
-			// ¹ŞÀº µ¥ÀÌÅÍ UTF-8 ¹®ÀÚ¿­ º¯È¯
+			// ë°›ì€ ë°ì´í„° UTF-8 ë¬¸ìì—´ ë³€í™˜
 			var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
 			Console.WriteLine($"Received: {message}");
 
-			// Å¬¶óÀÌ¾ğÆ®¿¡°Ô ÀÀ´ä Àü¼Û
-			var response = Encoding.UTF8.GetBytes($"Echo: {message}");
-			await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, cancellationToken);
+			// JSON íŒŒì‹± ì‹œë„
+			try
+			{
+				var inputData = JsonConvert.DeserializeObject<PlayerInputData>(message);
+				Console.WriteLine($"Player {inputData.playerID} moved to X: {inputData.x}, Y: {inputData.y}");
+
+				// ì„œë²„ì—ì„œ í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ì´ë™ ë°ì´í„° ì‘ë‹µ (ì˜ˆ: ë™ê¸°í™”ìš©)
+				var responseMessage = $"Player {inputData.playerID} moved to ({inputData.x}, {inputData.y})";
+				var responseBytes = Encoding.UTF8.GetBytes(responseMessage);
+				await webSocket.SendAsync(new ArraySegment<byte>(responseBytes), WebSocketMessageType.Text, true, cancellationToken);
+			}
+			catch (Newtonsoft.Json.JsonException)
+			{
+				Console.WriteLine("Invalid JSON format received.");
+			}
 		}
 	}
 	catch (Exception ex)
@@ -69,5 +83,3 @@ async Task HandleWebSocketAsync(WebSocket webSocket)
 			await webSocket.CloseAsync(WebSocketCloseStatus.InternalServerError, "Unexpected error", cancellationToken);
 	}
 }
-
-

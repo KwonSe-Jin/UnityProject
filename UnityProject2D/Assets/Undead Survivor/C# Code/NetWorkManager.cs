@@ -36,6 +36,15 @@ public class NetWorkManager : MonoBehaviour
 	}
 
 	// 메시지 보내기 (언제든 호출 가능)
+	public async void SendPlayerInput(int playerID, Vector2 inputVec)
+	{
+		if (!isConnected || webSocket.State != WebSocketState.Open)
+			return;
+
+		string message = $"{{\"playerID\":{playerID},\"x\":{inputVec.x},\"y\":{inputVec.y}}}";
+		await SendMessage(message);
+	}
+
 	public async Task SendMessage(string message)
 	{
 		if (webSocket == null || webSocket.State != WebSocketState.Open)

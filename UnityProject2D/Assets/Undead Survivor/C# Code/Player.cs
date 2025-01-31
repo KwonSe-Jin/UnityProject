@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Text;
+using System.Threading.Tasks;
 
 public class Player : MonoBehaviour
 {
@@ -13,6 +15,9 @@ public class Player : MonoBehaviour
 	SpriteRenderer SpriteR;
 	Animator Anim;
 
+	private NetWorkManager netWorkManager;
+	private Vector2 lastSentInput = Vector2.zero;
+
 	void Awake()
 	{
 		Rigid = GetComponent<Rigidbody2D>();
@@ -20,6 +25,8 @@ public class Player : MonoBehaviour
 		Anim = GetComponent<Animator>();
 		scanner = GetComponent<Scanner>();
 		hands = GetComponentsInChildren<Hand>(true);
+		
+		netWorkManager = FindObjectOfType<NetWorkManager>();
 	}
 
 	void OnEnable()
@@ -41,7 +48,12 @@ public class Player : MonoBehaviour
 		Vector2 NextVec = InputVec * Time.fixedDeltaTime * Speed;
 		// 위치 이동 (현재 위치 + inputVec)
 		Rigid.MovePosition(Rigid.position + NextVec);
-        
+		if (InputVec != lastSentInput)
+		{
+			lastSentInput = InputVec;
+			netWorkManager?.SendPlayerInput(GameManager.instance.playerID, InputVec);
+		}
+
 	}
 
 	void OnMove(InputValue value)
