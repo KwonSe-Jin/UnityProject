@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
 
 	private NetWorkManager netWorkManager;
 	private Vector2 lastSentInput = Vector2.zero;
+	private Vector2 lastSentPosition = Vector2.zero;
 
 	void Awake()
 	{
@@ -48,14 +49,25 @@ public class Player : MonoBehaviour
 		Vector2 NextVec = InputVec * Time.fixedDeltaTime * Speed;
 		// 위치 이동 (현재 위치 + inputVec)
 		Rigid.MovePosition(Rigid.position + NextVec);
-		if (InputVec != lastSentInput)
-		{
-			lastSentInput = InputVec;
-			netWorkManager?.SendPlayerInput(GameManager.instance.playerID, InputVec);
-		}
-
+		//if (InputVec != lastSentInput)
+		//{
+		//	lastSentInput = InputVec;
+		//	netWorkManager?.SendPlayerInput(GameManager.instance.playerID, InputVec);
+		//}
+		// 플레이어 위치 전송
+		SendPositionToServer();
 	}
+	void SendPositionToServer()
+	{
+		Vector2 currentPosition = Rigid.position;
 
+		// 위치가 변한 경우에만 전송
+		if (currentPosition != lastSentPosition)
+		{
+			lastSentPosition = currentPosition;
+			netWorkManager?.SendPlayerPosition(GameManager.instance.playerID, currentPosition);
+		}
+	}
 	void OnMove(InputValue value)
 	{
 		if (!GameManager.instance.isLive)

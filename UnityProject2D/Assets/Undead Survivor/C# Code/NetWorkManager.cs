@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 public class NetWorkManager : MonoBehaviour
 {
@@ -44,6 +45,19 @@ public class NetWorkManager : MonoBehaviour
 		string message = $"{{\"playerID\":{playerID},\"x\":{inputVec.x},\"y\":{inputVec.y}}}";
 		await SendMessage(message);
 	}
+	public async void SendPlayerPosition(int playerID, Vector2 position)
+	{
+		// JSON 또는 다른 형식으로 데이터 변환 후 서버로 전송
+		string json = JsonConvert.SerializeObject(new
+		{
+			playerID = playerID,
+			x = position.x,
+			y = position.y
+		});
+
+		await SendMessage(json);
+	}
+
 
 	public async Task SendMessage(string message)
 	{
