@@ -1,33 +1,36 @@
 ﻿using System.Net.WebSockets;
 using System.Text;
 
-namespace WebServer
+public class WebSocketHandler
 {
-	public class WebSocketHandler
+	private readonly RequestDelegate _next;
+
+	public WebSocketHandler(RequestDelegate next)
 	{
-		private readonly RequestDelegate _next;
+		_next = next;
+	}
 
-		public WebSocketHandler(RequestDelegate next)
+	public async Task Invoke(HttpContext context)
+	{
+		Console.WriteLine("Checking WebSocket request...");
+		if (context.WebSockets.IsWebSocketRequest)
 		{
-			_next = next;
+			Console.WriteLine("WebSocket request received.");
+			using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+			await HandleWebSocketCommunication(webSocket);
 		}
-
-		public async Task Invoke(HttpContext context)
+		else
 		{
-			if (context.WebSockets.IsWebSocketRequest)
-			{
-				using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-				await HandleWebSocketCommunication(webSocket);
-			}
-			else
-			{
-				await _next(context);
-			}
+			Console.WriteLine("Not a WebSocket request. Passing to next middleware.");
+			await _next(context); // WebSocket이 아닌 요청은 다음 미들웨어로 넘기기
 		}
+	}
 
-		private async Task HandleWebSocketCommunication(WebSocket webSocket)
+	private async Task HandleWebSocketCommunication(WebSocket webSocket)
+	{
+		var buffer = new byte[1024 * 4];
+		try
 		{
-			var buffer = new byte[1024 * 4];
 			while (webSocket.State == WebSocketState.Open)
 			{
 				var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
@@ -37,6 +40,10 @@ namespace WebServer
 					Console.WriteLine($"Received: {message}");
 				}
 			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error during WebSocket communication: {ex.Message}");
 		}
 	}
 }
