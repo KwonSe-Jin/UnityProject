@@ -91,6 +91,17 @@ public class NetWorkManager : MonoBehaviour
 
 			var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
 			Debug.Log($"Received: {receivedMessage}");
+
+			// JSON 데이터 변환 시도
+			try
+			{
+				MessageData messageData = JsonUtility.FromJson<MessageData>(receivedMessage);
+				Debug.Log($"Parsed JSON - Type: {messageData.Type}, Content: {messageData.Content}");
+			}
+			catch (System.Exception ex)
+			{
+				Debug.LogError($"JSON Parsing Error: {ex.Message}");
+			}
 		}
 	}
 
@@ -113,4 +124,12 @@ public class NetWorkManager : MonoBehaviour
 		cancellationTokenSource?.Cancel();
 		webSocket?.Dispose();
 	}
+}
+
+
+[System.Serializable]
+public class MessageData
+{
+	public string Type;
+	public string Content;
 }
