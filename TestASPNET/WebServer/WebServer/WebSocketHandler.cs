@@ -47,24 +47,44 @@ public class WebSocketHandler
 					var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
 					Console.WriteLine($"Received: {message}");
 
-					// JSON 데이터를 객체로 변환
-					var receivedData = JsonConvert.DeserializeObject<MessageData>(message);
-
-					// 클라이언트에게 보낼 응답 JSON 생성
-					var responseData = new MessageData
+					// 메시지가 "Ping from Unity"처럼 단순 텍스트인 경우
+					if (message == "Ping from Unity")
 					{
-						Type = "Echo", // 메시지 타입을 "Echo"로 설정
-						Content = $"Received: {receivedData.Content}" // 받은 내용을 그대로 응답
-					};
+						Console.WriteLine("Received a Ping message");
+						// 단순 텍스트 메시지는 별도로 처리
+					}
+					else
+					{
+						try
+						{
+							// JSON 데이터를 객체로 변환
+							var receivedData = JsonConvert.DeserializeObject<MessageData>(message);
+							if (receivedData != null)
+							{
+								Console.WriteLine($"Parsed JSON - Type: {receivedData.Type}, Content: {receivedData.Content}");
 
-					// 객체를 JSON 문자열로 변환
-					string jsonResponse = JsonConvert.SerializeObject(responseData);
+								// 클라이언트에게 보낼 응답 JSON 생성
+								var responseData = new MessageData
+								{
+									Type = "Echo",
+									Content = $"Received: {receivedData.Content}"
+								};
 
-					// JSON 데이터를 바이트 배열로 변환
-					var responseBytes = Encoding.UTF8.GetBytes(jsonResponse);
+								// 객체를 JSON 문자열로 변환
+								string jsonResponse = JsonConvert.SerializeObject(responseData);
 
-					// 클라이언트에게 메시지 전송
-					await webSocket.SendAsync(new ArraySegment<byte>(responseBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+								// JSON 데이터를 바이트 배열로 변환
+								var responseBytes = Encoding.UTF8.GetBytes(jsonResponse);
+
+								// 클라이언트에게 메시지 전송
+								await webSocket.SendAsync(new ArraySegment<byte>(responseBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+							}
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine($"JSON Parsing Error: {ex.Message}");
+						}
+					}
 				}
 				// 클라이언트가 연결을 종료하려는 경우
 				else if (result.MessageType == WebSocketMessageType.Close)

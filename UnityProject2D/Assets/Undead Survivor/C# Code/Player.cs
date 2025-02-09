@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
 		scanner = GetComponent<Scanner>();
 		hands = GetComponentsInChildren<Hand>(true);
 		
-		netWorkManager = FindObjectOfType<NetWorkManager>();
+		netWorkManager = FindAnyObjectByType<NetWorkManager>();
 	}
 
 	void OnEnable()
