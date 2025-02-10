@@ -10,7 +10,7 @@ namespace WebServer.Controllers
 		[HttpGet("{id}")]
 		public IActionResult GetPlayerInfo(int id)
 		{
-			return Ok(new { id, name = "Player1", level = 10 });
+			return Ok(new { id, name = "KSJ", level = 100 });
 		}
 	}
 }
