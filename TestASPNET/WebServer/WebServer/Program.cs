@@ -3,7 +3,7 @@ using WebServer;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add the required services for controllers
-builder.Services.AddControllers(); // REST API 서비스 등록
+builder.Services.AddControllersWithViews(); // REST API 서비스 등록
 
 var app = builder.Build();
 
