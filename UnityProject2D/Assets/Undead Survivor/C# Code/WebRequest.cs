@@ -5,7 +5,7 @@ using System.Text;
 
 public class WebRequest : MonoBehaviour
 {
-	private string baseUrl = "https://localhost:5001/api/player"; // API 서버 URL
+	private string baseUrl = "https://localhost:7187/api/player"; // API 서버 URL
 
 	// 플레이어 정보 가져오기 (GET)
 	public IEnumerator GetPlayerInfo(int playerId)
