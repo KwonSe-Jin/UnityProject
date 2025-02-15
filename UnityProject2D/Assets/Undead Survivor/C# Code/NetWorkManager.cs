@@ -15,7 +15,7 @@ public class NetWorkManager : MonoBehaviour
 	{
 		webSocket = new ClientWebSocket();
 		cancellationTokenSource = new CancellationTokenSource();
-		var serverUri = new System.Uri("wss://localhost:5001/ws");
+		var serverUri = new System.Uri("wss://localhost:7187/ws");
 
 		try
 		{

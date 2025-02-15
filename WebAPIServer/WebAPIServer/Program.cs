@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using WebAPIServer.Handlers;
 using WebAPIServer.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,4 +24,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+app.UseWebSockets();
+
+app.UseMiddleware<WebSocketHandler>(); // WebSocket 미들웨어 추가
+
 app.Run();
