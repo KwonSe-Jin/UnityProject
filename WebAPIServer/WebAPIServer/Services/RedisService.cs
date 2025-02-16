@@ -23,6 +23,9 @@ namespace WebAPIServer.Services
 		public List<(string, double)> GetTopPlayers(int count = 10)
 		{
 			var topPlayers = _db.SortedSetRangeByRankWithScores("leaderboard", 0, count - 1, Order.Descending);
+
+			// 디버깅 로그 추가
+			Console.WriteLine($"[Redis] Leaderboard Count: {topPlayers.Length}");
 			return topPlayers.Select(x => (x.Element.ToString(), x.Score)).ToList();
 		}
 	}
