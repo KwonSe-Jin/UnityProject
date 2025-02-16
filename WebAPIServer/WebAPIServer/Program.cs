@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using WebAPIServer.Handlers;
 using WebAPIServer.Models;
+using WebAPIServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,9 @@ builder.Services.AddDbContext<DataBaseContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Redis 서비스 등록
+builder.Services.AddSingleton<RedisService>();
 
 var app = builder.Build();
 
