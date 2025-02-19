@@ -20,13 +20,23 @@ namespace WebAPIServer.Services
 		}
 
 		// 상위 랭킹 조회
-		public List<(string, double)> GetTopPlayers(int count = 10)
+		public List<RankingEntry> GetTopPlayers(int count = 10)
 		{
-			var topPlayers = _db.SortedSetRangeByRankWithScores("leaderboard", 0, count - 1, Order.Descending);
+			var topPlayers = _db.SortedSetRangeByScoreWithScores("leaderboard", double.NegativeInfinity, double.PositiveInfinity, Exclude.None, Order.Descending, 0, count);
 
-			// 디버깅 로그 추가
 			Console.WriteLine($"[Redis] Leaderboard Count: {topPlayers.Length}");
-			return topPlayers.Select(x => (x.Element.ToString(), x.Score)).ToList();
+
+			return topPlayers.Select(x => new RankingEntry
+			{
+				PlayerName = x.Element.ToString(),
+				Score = x.Score
+			}).ToList();
+		}
+
+		public class RankingEntry
+		{
+			public string? PlayerName { get; set; }
+			public double Score { get; set; }
 		}
 	}
 }
