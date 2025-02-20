@@ -49,9 +49,7 @@ public class NetWorkManager : MonoBehaviour
 		string message = $"{{\"playerID\":{playerID},\"x\":{inputVec.x},\"y\":{inputVec.y}}}";
 		await SendMessage(message);
 	}
-	/// <summary>
-	/// 플레이어 위치를 FlatBuffers 직렬화 후 전송
-	/// </summary>
+
 	public async void SendPlayerPosition(int playerId, Vector3 position)
 	{
 		if (!isConnected || webSocket.State != WebSocketState.Open)
@@ -75,7 +73,7 @@ public class NetWorkManager : MonoBehaviour
 
 		// WebSocket으로 전송
 		await webSocket.SendAsync(new ArraySegment<byte>(packetData), WebSocketMessageType.Binary, true, CancellationToken.None);
-		Debug.Log($"Sent MovePacket: PlayerID={playerId}, Pos=({position.x}, {position.y}, {position.z})");
+		Debug.Log("Sent MovePacket: PlayerID={playerId}, Pos=({position.x}, {position.y}, {position.z})");
 	}
 
 
@@ -92,8 +90,7 @@ public class NetWorkManager : MonoBehaviour
 		Debug.Log($"Sent: {message}");
 	}
 
-	// 지속적으로 메시지 수신
-	/// </summary>
+
 	private async Task ReceiveMessages()
 	{
 		var buffer = new byte[1024 * 4];
@@ -114,7 +111,7 @@ public class NetWorkManager : MonoBehaviour
 			if (result.MessageType == WebSocketMessageType.Binary)
 			{
 				var byteBuffer = new ByteBuffer(buffer);
-				var movePacket = CS_MOVE_PACKET.GetRootAsCS_MOVE_PACKET(byteBuffer);
+				var movePacket = SC_MOVE_PACKET.GetRootAsSC_MOVE_PACKET(byteBuffer);
 
 				var position = movePacket.Position.Value;
 
