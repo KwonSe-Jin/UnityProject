@@ -3,7 +3,11 @@ using System.Text;
 using System.Threading;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
+
 using Newtonsoft.Json;
+using Google.FlatBuffers;
+using FBProtocol;
+using System;
 
 public class NetWorkManager : MonoBehaviour
 {
@@ -45,17 +49,33 @@ public class NetWorkManager : MonoBehaviour
 		string message = $"{{\"playerID\":{playerID},\"x\":{inputVec.x},\"y\":{inputVec.y}}}";
 		await SendMessage(message);
 	}
-	public async void SendPlayerPosition(int playerID, Vector2 position)
+	/// <summary>
+	/// 플레이어 위치를 FlatBuffers 직렬화 후 전송
+	/// </summary>
+	public async void SendPlayerPosition(int playerId, Vector3 position)
 	{
-		// JSON 또는 다른 형식으로 데이터 변환 후 서버로 전송
-		string json = JsonConvert.SerializeObject(new
+		if (!isConnected || webSocket.State != WebSocketState.Open)
 		{
-			playerID = playerID,
-			x = position.x,
-			y = position.y
-		});
+			Debug.LogWarning("WebSocket is not connected!");
+			return;
+		}
 
-		await SendMessage(json);
+		// FlatBuffer 빌더 생성
+		var builder = new FlatBufferBuilder(1024);
+
+		// VEC3 구조체 생성 (FlatBuffers는 struct를 먼저 만들어야 함)
+		var positionOffset = Vec3.CreateVec3(builder, position.x, position.y, position.z);
+		var movePacketOffset = CS_MOVE_PACKET.CreateCS_MOVE_PACKET(builder, playerId, positionOffset);
+
+		// 버퍼 완성
+		builder.Finish(movePacketOffset.Value);
+
+		// 직렬화된 바이트 배열 추출
+		byte[] packetData = builder.SizedByteArray();
+
+		// WebSocket으로 전송
+		await webSocket.SendAsync(new ArraySegment<byte>(packetData), WebSocketMessageType.Binary, true, CancellationToken.None);
+		Debug.Log($"Sent MovePacket: PlayerID={playerId}, Pos=({position.x}, {position.y}, {position.z})");
 	}
 
 
@@ -73,13 +93,14 @@ public class NetWorkManager : MonoBehaviour
 	}
 
 	// 지속적으로 메시지 수신
+	/// </summary>
 	private async Task ReceiveMessages()
 	{
 		var buffer = new byte[1024 * 4];
 
 		while (isConnected && webSocket.State == WebSocketState.Open)
 		{
-			var result = await webSocket.ReceiveAsync(new System.ArraySegment<byte>(buffer), CancellationToken.None);
+			var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
 			if (result.MessageType == WebSocketMessageType.Close)
 			{
@@ -89,18 +110,20 @@ public class NetWorkManager : MonoBehaviour
 				break;
 			}
 
-			var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-			Debug.Log($"Received: {receivedMessage}");
+			// 수신 데이터가 Binary일 경우 FlatBuffers 역직렬화 처리
+			if (result.MessageType == WebSocketMessageType.Binary)
+			{
+				var byteBuffer = new ByteBuffer(buffer);
+				var movePacket = CS_MOVE_PACKET.GetRootAsCS_MOVE_PACKET(byteBuffer);
 
-			// JSON 데이터 변환 시도
-			try
-			{
-				MessageData messageData = JsonUtility.FromJson<MessageData>(receivedMessage);
-				Debug.Log($"Parsed JSON - Type: {messageData.Type}, Content: {messageData.Content}");
+				var position = movePacket.Position.Value;
+
+				Debug.Log($"Received MovePacket: PlayerID={movePacket.PlayerId}, Pos=({position.X}, {position.Y}, {position.Z})");
 			}
-			catch (System.Exception ex)
+			else // 텍스트 메시지 처리
 			{
-				Debug.LogError($"JSON Parsing Error: {ex.Message}");
+				var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
+				Debug.Log($"Received Text: {receivedMessage}");
 			}
 		}
 	}
@@ -127,9 +150,3 @@ public class NetWorkManager : MonoBehaviour
 }
 
 
-[System.Serializable]
-public class MessageData
-{
-	public string Type;
-	public string Content;
-}
