@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BCrypt.Net;
 
 namespace WebAPIServer.Models
 {
@@ -14,6 +16,17 @@ namespace WebAPIServer.Models
 		public string PlayerName { get; set; } = ""; // 기본값 추가
 
 		[Required]
-		public string PlayerPw { get; set; } = ""; // 기본값 추가
+		public string PasswordHash { get; set; } = ""; // 기본값 추가
+
+		// 비밀번호 해싱 및 검증 함수 추가
+		public void SetPassword(string password)
+		{
+			PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
+		}
+
+		public bool VerifyPassword(string password)
+		{
+			return BCrypt.Net.BCrypt.Verify(password, PasswordHash);
+		}
 	}
 }

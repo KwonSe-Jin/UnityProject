@@ -32,7 +32,7 @@ namespace WebAPIServer.Controllers
 			var player = await _context.Players.FindAsync(id);
 			if (player == null)
 			{
-				return NotFound(); // 404 에러 반환
+				return NotFound(new { message = "해당 ID의 플레이어를 찾을 수 없습니다." });
 			}
 			return player;
 		}
@@ -46,5 +46,53 @@ namespace WebAPIServer.Controllers
 
 			return CreatedAtAction(nameof(GetPlayer), new { id = player.PlayerId }, player);
 		}
+
+		[HttpPost("register")]
+		public async Task<ActionResult> Register(PlayerRegisterRequest request)
+		{
+			// 중복 체크
+			if (await _context.Players.AnyAsync(p => p.PlayerName == request.PlayerName))
+			{
+				return BadRequest(new { message = "이미 존재하는 플레이어 이름입니다!" });
+			}
+
+			var newPlayer = new Player
+			{
+				PlayerName = request.PlayerName
+			};
+			newPlayer.SetPassword(request.Password); // 비밀번호 해싱 적용
+
+			_context.Players.Add(newPlayer);
+			await _context.SaveChangesAsync();
+
+			return Ok(new { message = "회원가입 성공!" });
+		}
+
+		[HttpPost("login")]
+		public async Task<ActionResult> Login(PlayerLoginRequest request)
+		{
+			var player = await _context.Players.FirstOrDefaultAsync(p => p.PlayerName == request.PlayerName);
+			if (player == null || !player.VerifyPassword(request.Password))
+			{
+				return Unauthorized(new { message = "로그인 실패! 아이디 또는 비밀번호를 확인하세요." });
+			}
+
+			//  할일 JWT 발급
+			return Ok(new { message = "로그인 성공!", playerId = player.PlayerId });
+		}
+
+	}
+	//  회원가입 요청 모델
+	public class PlayerRegisterRequest
+	{
+		public string PlayerName { get; set; }
+		public string Password { get; set; }
+	}
+
+	//  로그인 요청 모델
+	public class PlayerLoginRequest
+	{
+		public string PlayerName { get; set; }
+		public string Password { get; set; }
 	}
 }
