@@ -1,0 +1,15 @@
+namespace FBProtocol;
+
+
+table CS_CHAT_PACKET
+{
+	sender_id: int;    // 보낸 사람 ID
+	message: string;   // 채팅 메시지
+}
+
+table SC_CHAT_PACKET
+
+{
+	sender_id  : int;		
+	message    : string;	// 가변 크기
+}
