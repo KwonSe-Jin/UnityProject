@@ -12,7 +12,7 @@ namespace WebAPIServer.Models
 		{
 			modelBuilder.Entity<Player>()
 				.HasIndex(p => p.PlayerName)
-				.IsUnique(); // PlayerName을 유니크 값으로 설정
+				.IsUnique(); // PlayerName을 유니크 값으로 설정 중복 키 삽입 불가
 		}
 	}
 }
