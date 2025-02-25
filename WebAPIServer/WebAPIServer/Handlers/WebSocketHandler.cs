@@ -28,6 +28,7 @@ namespace WebAPIServer.Handlers
 			{
 				Console.WriteLine("Not a WebSocket request. Passing to next middleware.");
 				await _next(context);
+				
 			}
 		}
 
@@ -82,6 +83,7 @@ namespace WebAPIServer.Handlers
 						catch (Exception ex)
 						{
 							Console.WriteLine("JSON Parsing Error: {ex.Message}");
+							
 						}
 					}
 					// FlatBuffers 기반 바이너리 메시지 처리
