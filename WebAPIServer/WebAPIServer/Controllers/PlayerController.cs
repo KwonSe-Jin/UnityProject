@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPIServer.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebAPIServer.Services;
 
 
 namespace WebAPIServer.Controllers
@@ -12,10 +13,12 @@ namespace WebAPIServer.Controllers
 	public class PlayerController : ControllerBase
 	{
 		private readonly DataBaseContext _context;
+		private readonly JwtService _jwtService;
 
-		public PlayerController(DataBaseContext context)
+		public PlayerController(DataBaseContext context, JwtService jwtService)
 		{
 			_context = context;
+			_jwtService = jwtService;
 		}
 
 		// 모든 플레이어 조회 (GET /api/player)
@@ -76,9 +79,16 @@ namespace WebAPIServer.Controllers
 			{
 				return Unauthorized(new { message = "로그인 실패! 아이디 또는 비밀번호를 확인하세요." });
 			}
+			// JWT 토큰 생성
+			var token = _jwtService.GenerateToken(player.PlayerId, player.PlayerName);
 
 			//  할일 JWT 발급
-			return Ok(new { message = "로그인 성공!", playerId = player.PlayerId });
+			 return Ok(new
+            {
+                message = "로그인 성공!",
+                token,
+                playerId = player.PlayerId
+            });
 		}
 
 	}
