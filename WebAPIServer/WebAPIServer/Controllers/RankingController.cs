@@ -29,6 +29,15 @@ namespace WebAPIServer.Controllers
 			var topPlayers = _redisService.GetTopPlayers(count);
 			return Ok(topPlayers);
 		}
+
+		// 특정 날짜의 랭킹 조회 API (GET /api/ranking/date)
+		[HttpGet("date")]
+		public IActionResult GetTopPlayersByDate([FromQuery] string date, [FromQuery] int count = 10)
+		{
+			// 입력 예시 data = 2025-02-27
+			var topPlayers = _redisService.GetTopPlayersByDate(date, count);
+			return Ok(topPlayers);
+		}
 	}
 
 	public class PlayerScoreRequest
