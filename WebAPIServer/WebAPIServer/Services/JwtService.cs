@@ -27,10 +27,11 @@ namespace WebAPIServer.Services
 		{
 			var claims = new[]
 			{
-			new Claim(JwtRegisteredClaimNames.Sub, playerId.ToString()),
-			new Claim(JwtRegisteredClaimNames.UniqueName, playerName),
-			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-			};
+				new Claim(JwtRegisteredClaimNames.Sub, playerId.ToString()),   // 사용자 ID
+                new Claim(ClaimTypes.Name, playerName),  // 사용자 이름
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // JWT 고유 ID
+                new Claim(ClaimTypes.Role, "Player")  // `[Authorize(Roles = "Player")]` 사용 가능
+            };
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
 			var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -45,6 +46,7 @@ namespace WebAPIServer.Services
 
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
+
 		public ClaimsPrincipal? ValidateToken(string token)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
@@ -54,26 +56,40 @@ namespace WebAPIServer.Services
 			{
 				var parameters = new TokenValidationParameters
 				{
-					ValidateIssuerSigningKey = true,  // 1. 서명 검증 (토큰 변조 확인)
+					ValidateIssuerSigningKey = true, // 1. 서명 검증 (토큰 변조 확인)
+
 					IssuerSigningKey = new SymmetricSecurityKey(key),
 
-					ValidateIssuer = true,  // 2. 발급자 확인 (iss 필드 체크)
+					ValidateIssuer = true, // 2. 발급자 확인 (iss 필드 체크)
+
 					ValidIssuer = _issuer,
 
-					ValidateAudience = true,  // 3. 대상 확인 (aud 필드 체크)
+					ValidateAudience = true, // 3. 대상 확인 (aud 필드 체크)
+
 					ValidAudience = _audience,
 
-					ValidateLifetime = true,  // 4. 만료 시간 확인 (exp 필드 체크)
+					ValidateLifetime = true, // 4. 만료 시간 확인 (exp 필드 체크)
+
 					ClockSkew = TimeSpan.Zero
 				};
 
-				return tokenHandler.ValidateToken(token, parameters, out _); // 검증 성공 시 ClaimsPrincipal 반환
+				return tokenHandler.ValidateToken(token, parameters, out _);
 			}
-			catch
+			catch (SecurityTokenExpiredException)
 			{
-				return null; // 검증 실패 시 null 반환
+				Console.WriteLine(" JWT 토큰이 만료되었습니다.");
+				return null;
+			}
+			catch (SecurityTokenInvalidSignatureException)
+			{
+				Console.WriteLine(" JWT 서명이 유효하지 않습니다.");
+				return null;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($" JWT 검증 중 오류 발생: {ex.Message}");
+				return null;
 			}
 		}
-
 	}
 }
