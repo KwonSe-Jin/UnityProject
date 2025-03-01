@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebAPIServer.Services;
 
 namespace WebAPIServer.Controllers
@@ -8,18 +9,39 @@ namespace WebAPIServer.Controllers
 	public class RankingController : ControllerBase
 	{
 		private readonly RedisService _redisService;
-
-		public RankingController(RedisService redisService)
+		private readonly JwtService _jwtService;
+		public RankingController(RedisService redisService, JwtService jwtService)
 		{
 			_redisService = redisService;
+			_jwtService = jwtService;
 		}
-
 		// 점수 업데이트 API (POST /api/ranking)
+		[Authorize]
 		[HttpPost]
-		public IActionResult UpdatePlayerScore([FromBody] PlayerScoreRequest request)
+		public IActionResult UpdatePlayerScore([FromHeader] string authorization, [FromBody] PlayerScoreRequest request)
 		{
-			_redisService.UpdatePlayerScore(request.PlayerName, request.Score);
-			return Ok($"Player {request.PlayerName} score updated!");
+			if (string.IsNullOrEmpty(authorization) || !authorization.StartsWith("Bearer "))
+			{
+				return Unauthorized(new { message = "JWT 토큰이 필요합니다." });
+			}
+			var token = authorization.Substring("Bearer ".Length).Trim();
+			var claimsPrincipal = _jwtService.ValidateToken(token);
+
+			if (claimsPrincipal == null)
+			{
+				return Unauthorized(new { message = "유효하지 않은 JWT 토큰입니다." });
+			}
+
+			var playerName = claimsPrincipal.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+
+			if (string.IsNullOrEmpty(playerName))
+			{
+				return Unauthorized(new { message = "JWT에서 플레이어 정보를 찾을 수 없습니다." });
+			}
+
+			_redisService.UpdatePlayerScore(playerName, request.Score);
+
+			return Ok(new { message = $"플레이어 {playerName} 점수 업데이트 완료!", PlayerName = playerName, Score = request.Score });
 		}
 
 		// 상위 랭킹 조회 API (GET /api/ranking)
@@ -42,7 +64,6 @@ namespace WebAPIServer.Controllers
 
 	public class PlayerScoreRequest
 	{
-		public string? PlayerName { get; set; }
 		public int Score { get; set; }
 	}
 }
