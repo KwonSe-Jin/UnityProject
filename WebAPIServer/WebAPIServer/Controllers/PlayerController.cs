@@ -4,6 +4,7 @@ using WebAPIServer.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebAPIServer.Services;
+using WebAPIServer.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
@@ -30,38 +31,6 @@ namespace WebAPIServer.Controllers
 		public async Task<ActionResult<IEnumerable<Player>>> GetPlayers()
 		{
 			return await _context.Players.ToListAsync();
-		}
-
-		// 특정 플레이어 조회 (GET /api/player/{id})
-		[Authorize(Roles = "Player")] // JWT 인증된 사용자만 접근 가능
-		[HttpGet("{id}")]
-		public async Task<ActionResult<Player>> GetPlayer(int id, [FromHeader] string authorization)
-		{
-			// 기본적인 인증 
-			var playerIdFromToken = int.Parse(User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value ?? "0");
-
-			//  추가적인 검증 (JWT를 수동으로 확인)
-			var token = authorization.Substring("Bearer ".Length).Trim();
-			var claimsPrincipal = _jwtService.ValidateToken(token);
-
-			if (claimsPrincipal == null)
-			{
-				return Unauthorized(new { message = "유효하지 않은 JWT 토큰입니다." });
-			}
-
-			//   사용자가 자신의 정보만 조회할 수 있도록 제한
-			if (id != playerIdFromToken)
-			{
-				return Forbid(); 
-			}
-
-			var player = await _context.Players.FindAsync(id);
-			if (player == null)
-			{
-				return NotFound(new { message = "해당 ID의 플레이어를 찾을 수 없습니다." });
-			}
-
-			return player;
 		}
 
 		[HttpPost("register")]
@@ -106,17 +75,5 @@ namespace WebAPIServer.Controllers
 		}
 
 	}
-	//  회원가입 요청 모델
-	public class PlayerRegisterRequest
-	{
-		public string PlayerName { get; set; }
-		public string Password { get; set; }
-	}
 
-	//  로그인 요청 모델
-	public class PlayerLoginRequest
-	{
-		public string PlayerName { get; set; }
-		public string Password { get; set; }
-	}
 }
