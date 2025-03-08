@@ -31,3 +31,5 @@ C:\Users\sejin\Downloads\UnityProject\UnityProject\MatchingApiServer\MatchingApi
 C:\Users\sejin\Downloads\UnityProject\UnityProject\MatchingApiServer\MatchingApiServer\obj\Debug\net8.0\MatchingApiServer.pdb
 C:\Users\sejin\Downloads\UnityProject\UnityProject\MatchingApiServer\MatchingApiServer\obj\Debug\net8.0\MatchingApiServer.genruntimeconfig.cache
 C:\Users\sejin\Downloads\UnityProject\UnityProject\MatchingApiServer\MatchingApiServer\obj\Debug\net8.0\ref\MatchingApiServer.dll
+C:\Users\sejin\Downloads\UnityProject\UnityProject\MatchingApiServer\MatchingApiServer\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+C:\Users\sejin\Downloads\UnityProject\UnityProject\MatchingApiServer\MatchingApiServer\bin\Debug\net8.0\StackExchange.Redis.dll
