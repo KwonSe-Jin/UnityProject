@@ -5,9 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
 builder.Services.AddSingleton<RedisService>(); // Redis 서비스
 builder.Services.AddSingleton<IMatchingService, MatchingService>(); // 싱글톤으로 서비스 등록
+builder.Services.AddControllers();
 																	// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
