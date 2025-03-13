@@ -13,3 +13,9 @@ C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\obj\Deb
 C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\obj\Debug\net8.0\GameServer.pdb
 C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\obj\Debug\net8.0\GameServer.genruntimeconfig.cache
 C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\obj\Debug\net8.0\ref\GameServer.dll
+C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\bin\Debug\net8.0\StackExchange.Redis.dll
+C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\bin\Debug\net8.0\System.IO.Pipelines.dll
+C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\obj\Debug\net8.0\GameServer.csproj.AssemblyReference.cache
+C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\obj\Debug\net8.0\GameServer.csproj.CopyComplete

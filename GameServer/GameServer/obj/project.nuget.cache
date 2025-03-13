@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "d0t2Nq6I2JigZ+fAg4t0GVrjRC+MYZ7IS33p/WArlicpyV6KbTdWa9riFu3Zjqb59hzVP/VmsfQGFaEpB2GuFg==",
+  "dgSpecHash": "/UIBDZZM0sbUqG4ZhxR7opWcJ3tHsEZ1LWUIH6TR83PPTqTrNzh8WLe7qQhN+9zp428YM2VahaX+xEAoWI3FfQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\sejin\\Downloads\\UnityProject\\UnityProject\\GameServer\\GameServer\\GameServer.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\sejin\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.0\\microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\sejin\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.8\\pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
+    "C:\\Users\\sejin\\.nuget\\packages\\stackexchange.redis\\2.8.31\\stackexchange.redis.2.8.31.nupkg.sha512",
+    "C:\\Users\\sejin\\.nuget\\packages\\system.io.pipelines\\5.0.1\\system.io.pipelines.5.0.1.nupkg.sha512"
+  ],
   "logs": []
 }
