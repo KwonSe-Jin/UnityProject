@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "/UIBDZZM0sbUqG4ZhxR7opWcJ3tHsEZ1LWUIH6TR83PPTqTrNzh8WLe7qQhN+9zp428YM2VahaX+xEAoWI3FfQ==",
+  "dgSpecHash": "UYFka2s2qtGrx0PsL1SvAxYij5glMoQ42U7x1EztOQPtrNi67HCa8pbxXj9BfPSylCu0hVywL5w9gGQFaTEF8Q==",
   "success": true,
   "projectFilePath": "C:\\Users\\sejin\\Downloads\\UnityProject\\UnityProject\\GameServer\\GameServer\\GameServer.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\sejin\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\10.0.0-preview.1.25080.5\\microsoft.extensions.dependencyinjection.10.0.0-preview.1.25080.5.nupkg.sha512",
+    "C:\\Users\\sejin\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.0-preview.1.25080.5\\microsoft.extensions.dependencyinjection.abstractions.10.0.0-preview.1.25080.5.nupkg.sha512",
     "C:\\Users\\sejin\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.0\\microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\sejin\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.8\\pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "C:\\Users\\sejin\\.nuget\\packages\\stackexchange.redis\\2.8.31\\stackexchange.redis.2.8.31.nupkg.sha512",

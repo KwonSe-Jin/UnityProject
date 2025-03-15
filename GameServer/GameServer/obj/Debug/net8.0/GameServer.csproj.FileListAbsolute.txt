@@ -19,3 +19,5 @@ C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\bin\Deb
 C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\bin\Debug\net8.0\System.IO.Pipelines.dll
 C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\obj\Debug\net8.0\GameServer.csproj.AssemblyReference.cache
 C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\obj\Debug\net8.0\GameServer.csproj.CopyComplete
+C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\sejin\Downloads\UnityProject\UnityProject\GameServer\GameServer\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll

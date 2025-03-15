@@ -44,6 +44,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[10.0.0-preview.1.25080.5, )"
+            },
             "StackExchange.Redis": {
               "target": "Package",
               "version": "[2.8.31, )"
