@@ -59,6 +59,7 @@ builder.Services.AddSwaggerGen();
 
 // 서비스 등록
 builder.Services.AddSingleton<RedisService>(); // Redis 서비스
+builder.Services.AddSingleton<MatchingRedisService>(); // Redis 서비스
 builder.Services.AddScoped<JwtService>(); // JWT 토큰 서비스
 var app = builder.Build();
 
