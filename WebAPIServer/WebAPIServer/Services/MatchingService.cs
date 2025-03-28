@@ -5,78 +5,64 @@ using Microsoft.Extensions.Logging;
 using WebAPIServer.Enums; // ErrorCode 사용
 using WebAPIServer.DTOs; // CancelMatchingRes 사용
 using WebAPIServer.Services.Interface;
+using WebAPIServer.Services;
 
 public class MatchingService : IMatchingService
 {
-	private readonly HttpClient _httpClient;
+	private readonly MatchingRedisService _redisService;
 	private readonly ILogger<MatchingService> _logger;
 
-	public MatchingService(ILogger<MatchingService> logger, IConfiguration configuration)
+	public MatchingService(MatchingRedisService redisService, ILogger<MatchingService> logger)
 	{
+		_redisService = redisService;
 		_logger = logger;
-		_httpClient = new HttpClient { BaseAddress = new Uri(configuration["MatchServerUrl"]!) };
 	}
 
-	public async Task<MatchingRes> RequestMatching(MatchingReq req)
+	// 매칭 요청 처리 (Redis에 추가)
+	public async Task<MatchingRes> RequestMatching(MatchingReq request)
 	{
-		try
-		{
-			var httpResponse = await _httpClient.PostAsJsonAsync("api/requestmatching", req);
-			if (httpResponse.StatusCode != HttpStatusCode.OK)
-			{
-				_logger.LogError("RequestMatching failed");
-				return new MatchingRes() { ErrorCode = ErrorCode.MATCHING_SERVER_ERROR };
-			}
+		_logger.LogInformation($"[매칭 요청] {request.UserName}");
 
-			var response = await httpResponse.Content.ReadFromJsonAsync<MatchingRes>();
-			return response ?? new MatchingRes() { ErrorCode = ErrorCode.MATCHING_SERVER_ERROR };
-		}
-		catch (Exception e)
+		bool isAlreadyQueued = await _redisService.IsUserInMatchQueue(request.UserName);
+		if (isAlreadyQueued)
 		{
-			_logger.LogError(e, "RequestMatching failed");
-			return new MatchingRes() { ErrorCode = ErrorCode.MATCHING_SERVER_ERROR };
+			return new MatchingRes { ErrorCode = ErrorCode.ALREADY_IN_QUEUE };
 		}
+
+		await _redisService.AddToMatchQueue(request.UserName);
+		return new MatchingRes { ErrorCode = ErrorCode.SUCCESS };
 	}
 
-	public async Task<CancelMatchingRes> CancelMatching(CancelMatchingReq req)
+	public async Task<CancelMatchingRes> CancelMatching(CancelMatchingReq request)
 	{
-		try
-		{
-			var httpResponse = await _httpClient.PostAsJsonAsync("api/canclematching", req);
-			if (httpResponse.StatusCode != HttpStatusCode.OK)
-			{
-				_logger.LogError("CancleMatching failed");
-				return new CancelMatchingRes() { ErrorCode = ErrorCode.MATCHING_SERVER_ERROR };
-			}
+		_logger.LogInformation($"[매칭 취소 요청] {request.UserName}");
 
-			var response = await httpResponse.Content.ReadFromJsonAsync<CancelMatchingRes>();
-			return response ?? new CancelMatchingRes() { ErrorCode = ErrorCode.MATCHING_SERVER_ERROR };
-		}
-		catch (Exception e)
+		bool removed = await _redisService.RemoveFromMatchQueue(request.UserName);
+		if (removed)
 		{
-			_logger.LogError(e, "CancleMatching failed");
-			return new CancelMatchingRes() { ErrorCode = ErrorCode.MATCHING_SERVER_ERROR };
+			return new CancelMatchingRes { ErrorCode = ErrorCode.SUCCESS };
 		}
+
+		return new CancelMatchingRes { ErrorCode = ErrorCode.NOT_FOUND };
 	}
 
-	public async Task<CheckMatchingRes> CheckMatching(CheckMatchingReq req)
+	// 매칭 상태 확인 (Redis에서 조회)
+	public async Task<CheckMatchingRes> CheckMatching(CheckMatchingReq request)
 	{
-		try
-		{
-			var httpResponse = await _httpClient.PostAsJsonAsync("api/checkmatching", req);
-			if (httpResponse.StatusCode != HttpStatusCode.OK)
-			{
-				_logger.LogError("CheckMatching failed");
-				return new CheckMatchingRes() { ErrorCode = ErrorCode.MATCHING_SERVER_ERROR };
-			}
+		_logger.LogInformation($"[매칭 상태 확인] {request.UserName}");
 
-			var response = await httpResponse.Content.ReadFromJsonAsync<CheckMatchingRes>();
-			return response ?? new CheckMatchingRes() { ErrorCode = ErrorCode.MATCHING_SERVER_ERROR };
-		}
-		catch (Exception e)
+		bool isInQueue = await _redisService.IsUserInMatchQueue(request.UserName);
+		if (isInQueue)
 		{
-			_logger.LogError(e, "CheckMatching failed");
-			return new CheckMatchingRes() { ErrorCode = ErrorCode.MATCHING_SERVER_ERROR };
+			return new CheckMatchingRes { ErrorCode = ErrorCode.SUCCESS, Status = "Waiting" };
 		}
+
+		return new CheckMatchingRes { ErrorCode = ErrorCode.NOT_FOUND };
+	}
+
+	// 매칭된 유저 가져오기 (대기열에서 꺼내기)
+	public async Task<string?> GetMatchedUser()
+	{
+		return await _redisService.PopFromMatchQueue();
 	}
 }

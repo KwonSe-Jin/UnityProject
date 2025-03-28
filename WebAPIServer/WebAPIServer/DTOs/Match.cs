@@ -36,5 +36,7 @@ namespace WebAPIServer.DTOs
 		public string GameServerIp { get; set; } = string.Empty; // 할당된 게임 서버 IP
 		public int GameServerPort { get; set; } = 0; // 할당된 게임 서버 포트
 		public bool IsMatched { get; set; } = false; // 매칭 성공 여부
+
+		public string Status { get; set; }
 	}
 }

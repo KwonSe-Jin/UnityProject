@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPIServer.DTOs;
 using WebAPIServer.Services;
 
 namespace WebAPIServer.Controllers
@@ -60,10 +61,5 @@ namespace WebAPIServer.Controllers
 			var topPlayers = _redisService.GetTopPlayersByDate(date, count);
 			return Ok(topPlayers);
 		}
-	}
-
-	public class PlayerScoreRequest
-	{
-		public int Score { get; set; }
 	}
 }
