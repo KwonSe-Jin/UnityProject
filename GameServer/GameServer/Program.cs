@@ -1,5 +1,7 @@
-﻿using System;
+﻿using StackExchange.Redis;
+using System;
 using System.Threading.Tasks;
+
 
 namespace GameServer
 {
@@ -11,12 +13,20 @@ namespace GameServer
 
 			string redisConnectionString = "localhost:6379"; // Redis 연결 정보
 
-			// Redis 및 GameServer 직접 생성
-			RedisService redisService = new RedisService(redisConnectionString);
-			GameServer gameServer = new GameServer(redisService);
+			var redis = await ConnectionMultiplexer.ConnectAsync(redisConnectionString);
+			var db = redis.GetDatabase();
 
-			// 매칭 루프 실행
-			await gameServer.CheckAndStartMatch();
+			// 방 관리 매니저
+			var roomManager = new RoomManager();
+
+			// 매칭 감시 스레드 실행
+			var matchMaker = new GameServerMatchMaker(db, roomManager, "127.0.0.1", 9000);
+			var matchTask = matchMaker.StartMatchingLoop(CancellationToken.None);
+
+			// WebSocket 서버 실행 (다음 단계에서 추가할 부분)
+			await WebSocketHost.Start(roomManager);
+
+			await matchTask; // 이 줄은 사실상 서버가 종료되지 않도록 하기 위함
 		}
 	}
 }

@@ -31,12 +31,11 @@ namespace WebAPIServer.DTOs
 
 	public class CheckMatchingRes
 	{
-		public ErrorCode ErrorCode { get; set; } = ErrorCode.SUCCESS;
-		public string MatchId { get; set; } = string.Empty;
-		public string GameServerIp { get; set; } = string.Empty; // 할당된 게임 서버 IP
-		public int GameServerPort { get; set; } = 0; // 할당된 게임 서버 포트
-		public bool IsMatched { get; set; } = false; // 매칭 성공 여부
-
-		public string Status { get; set; }
+		public ErrorCode ErrorCode { get; set; }
+		public string Status { get; set; } = "";
+		public string? RoomIP { get; set; }
+		public int? RoomPort { get; set; }
+		public string? RoomToken { get; set; }
 	}
+
 }

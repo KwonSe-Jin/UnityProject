@@ -57,6 +57,19 @@ public class MatchingService : IMatchingService
 			return new CheckMatchingRes { ErrorCode = ErrorCode.SUCCESS, Status = "Waiting" };
 		}
 
+		var roomInfo = await _redisService.GetMatchedRoomInfo(request.UserName);
+		if (roomInfo != null)
+		{
+			return new CheckMatchingRes
+			{
+				ErrorCode = ErrorCode.SUCCESS,
+				Status = "Matched",
+				RoomIP = roomInfo.IP,
+				RoomPort = roomInfo.Port,
+				RoomToken = roomInfo.RoomToken
+			};
+		}
+
 		return new CheckMatchingRes { ErrorCode = ErrorCode.NOT_FOUND };
 	}
 
