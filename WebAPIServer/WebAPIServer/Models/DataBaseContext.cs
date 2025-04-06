@@ -7,7 +7,8 @@ namespace WebAPIServer.Models
 		public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options) { }
 
 		public DbSet<Player> Players { get; set; } // 기존 테이블
-
+		public DbSet<Character> Characters { get; set; }
+		public DbSet<UserCharacter> UserCharacters { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<Player>()
