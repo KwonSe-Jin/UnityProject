@@ -1,8 +1,7 @@
 ﻿using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GameServer
@@ -12,15 +11,14 @@ namespace GameServer
 		private readonly IDatabase _db;
 		private readonly RoomManager _roomManager;
 		private readonly string _ip;
-		private readonly int _portStart;
-		private int _roomCounter = 0;
+		private readonly int _fixedPort;
 
-		public GameServerMatchMaker(IDatabase db, RoomManager manager, string ip, int portStart)
+		public GameServerMatchMaker(IDatabase db, RoomManager manager, string ip, int fixedPort)
 		{
 			_db = db;
 			_roomManager = manager;
 			_ip = ip;
-			_portStart = portStart;
+			_fixedPort = fixedPort; // 포트는 고정값 사용 (예: 9000)
 		}
 
 		public async Task StartMatchingLoop(CancellationToken token)
@@ -38,17 +36,16 @@ namespace GameServer
 
 					if (!string.IsNullOrEmpty(player1) && !string.IsNullOrEmpty(player2))
 					{
-						int assignedPort = _portStart + Interlocked.Increment(ref _roomCounter);
 						string tokenStr = Guid.NewGuid().ToString();
 
 						_roomManager.CreateRoom(player1, player2, tokenStr);
 
 						var roomInfo = new HashEntry[]
 						{
-						new("ip", _ip),
-						new("port", assignedPort.ToString()),
-						new("roomToken", tokenStr),
-						new("players", $"{player1},{player2}")
+							new("ip", _ip),
+							new("port", _fixedPort.ToString()), // 고정 포트
+							new("roomToken", tokenStr),
+							new("players", $"{player1},{player2}")
 						};
 
 						await _db.HashSetAsync($"matched_room:{player1}", roomInfo);
@@ -56,11 +53,11 @@ namespace GameServer
 						await _db.KeyExpireAsync($"matched_room:{player1}", TimeSpan.FromMinutes(2));
 						await _db.KeyExpireAsync($"matched_room:{player2}", TimeSpan.FromMinutes(2));
 
-						Console.WriteLine($"[매칭 완료] {player1} vs {player2} @ {_ip}:{assignedPort}");
+						Console.WriteLine($"[매칭 완료] {player1} vs {player2} @ {_ip}:{_fixedPort}");
 					}
 				}
 
-				await Task.Delay(500);
+				await Task.Delay(500); // 0.5초마다 매칭 검사
 			}
 		}
 	}
