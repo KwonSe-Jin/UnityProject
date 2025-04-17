@@ -1,0 +1,15 @@
+<해야할 것>
+API Server(ASP .NET Core 8)
+(MSSQL)
+- 회원가입 && 로그인
+- 상점(캐릭터 구매)
+- 퀘스트
+(REDIS)
+- Redis List 를 활용한 매칭 시스템 
+- 랭킹 시스템(시간 당 업데이트)
+
+GameServer
+이동 동기화
+채팅
+(REDIS)
+- 게임 종료 시 점수 저장 
