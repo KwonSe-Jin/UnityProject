@@ -47,6 +47,32 @@ namespace WebAPIServer.Migrations
                     b.HasKey("CharacterId");
 
                     b.ToTable("characters");
+
+                    b.HasData(
+                        new
+                        {
+                            CharacterId = 1,
+                            Description = "근접 캐릭터",
+                            IsOnSale = true,
+                            Name = "전사",
+                            Price = 500
+                        },
+                        new
+                        {
+                            CharacterId = 2,
+                            Description = "마법 캐릭터",
+                            IsOnSale = true,
+                            Name = "마법사",
+                            Price = 600
+                        },
+                        new
+                        {
+                            CharacterId = 3,
+                            Description = "활 캐릭터",
+                            IsOnSale = true,
+                            Name = "궁수",
+                            Price = 550
+                        });
                 });
 
             modelBuilder.Entity("WebAPIServer.Models.Player", b =>

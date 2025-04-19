@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using WebAPIServer.Models;
+using WebAPIServer.DTOs;
+
 
 namespace WebAPIServer.Controllers
 {
@@ -24,12 +26,13 @@ namespace WebAPIServer.Controllers
 			return await _context.Characters.Where(c => c.IsOnSale).ToListAsync();
 		}
 
-		// POST: /api/shop/buy
+		// 캐릭터 구매
 		[HttpPost("buy")]
-		[Authorize] // JWT 필요
-		public async Task<ActionResult> BuyCharacter([FromBody] int characterId)
+		[Authorize]
+		public async Task<ActionResult> BuyCharacter([FromBody] BuyCharacterRequest request)
 		{
 			var playerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+			int characterId = request.CharacterId;
 
 			var alreadyOwned = await _context.UserCharacters
 				.AnyAsync(uc => uc.PlayerId == playerId && uc.CharacterId == characterId);
@@ -41,7 +44,6 @@ namespace WebAPIServer.Controllers
 			if (character == null || !character.IsOnSale)
 				return NotFound(new { message = "존재하지 않거나 판매 중이 아닌 캐릭터입니다." });
 
-			// 구매 처리 (코인 차감 등은 생략됨. 필요 시 Player에 Coins 컬럼 추가)
 			var userCharacter = new UserCharacter
 			{
 				PlayerId = playerId,
@@ -53,6 +55,7 @@ namespace WebAPIServer.Controllers
 
 			return Ok(new { message = "캐릭터 구매 완료!" });
 		}
+
 
 		// GET: /api/shop/my-characters
 		[HttpGet("my-characters")]

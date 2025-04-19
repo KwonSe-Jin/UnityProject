@@ -14,6 +14,12 @@ namespace WebAPIServer.Models
 			modelBuilder.Entity<Player>()
 				.HasIndex(p => p.PlayerName)
 				.IsUnique(); // PlayerName을 유니크 값으로 설정 중복 키 삽입 불가
+
+			modelBuilder.Entity<Character>().HasData(
+				new Character { CharacterId = 1, Name = "전사", Description = "근접 캐릭터", Price = 500, IsOnSale = true },
+				new Character { CharacterId = 2, Name = "마법사", Description = "마법 캐릭터", Price = 600, IsOnSale = true },
+				new Character { CharacterId = 3, Name = "궁수", Description = "활 캐릭터", Price = 550, IsOnSale = true }
+			);
 		}
 	}
 }
