@@ -1,4 +1,6 @@
 ﻿using StackExchange.Redis;
+using WebAPIServer.DTOs;
+
 
 namespace WebAPIServer.Services
 {
@@ -29,12 +31,6 @@ namespace WebAPIServer.Services
 			return queue.Contains(userName);
 		}
 
-		public async Task<string[]> GetMatchQueue()
-		{
-			var queue = await _db.ListRangeAsync(MatchQueueKey, 0, -1);
-			return Array.ConvertAll(queue, x => x.ToString());
-		}
-
 		public async Task<MatchedRoomInfo?> GetMatchedRoomInfo(string userName)
 		{
 			string key = $"matched_room:{userName}";
@@ -53,12 +49,7 @@ namespace WebAPIServer.Services
 			};
 		}
 
-		public class MatchedRoomInfo
-		{
-			public string IP { get; set; } = "";
-			public int Port { get; set; }
-			public string RoomToken { get; set; } = "";
-		}
+
 	}
 }
 

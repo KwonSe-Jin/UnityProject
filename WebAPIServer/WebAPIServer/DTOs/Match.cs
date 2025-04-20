@@ -37,5 +37,10 @@ namespace WebAPIServer.DTOs
 		public int? RoomPort { get; set; }
 		public string? RoomToken { get; set; }
 	}
-
+	public class MatchedRoomInfo
+	{
+		public string IP { get; set; } = "";
+		public int Port { get; set; }
+		public string RoomToken { get; set; } = "";
+	}
 }
