@@ -4,15 +4,17 @@ using TMPro; // TMP¿ë
 
 public class GameRoomManager : MonoBehaviour
 {
-
+    
     [Header("Buttons")]
     public Button buttonShop;
     public Button buttonRanking;
+    public Button buttonMatching;
 
     private void Start()
     {
         buttonShop.onClick.AddListener(OnShopnClicked);
         buttonRanking.onClick.AddListener(OnRankingClicked);
+        buttonMatching.onClick.AddListener(OnMatchingClicked);
     }
 
     void OnShopnClicked()
@@ -24,5 +26,8 @@ public class GameRoomManager : MonoBehaviour
     {
         UIManager.Instance.ShowPanel(UIPanelType.Ranking);
     }
-
+    void OnMatchingClicked()
+    {
+        UIManager.Instance.ShowPanel(UIPanelType.Matching);
+    }
 }

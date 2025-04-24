@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum UIPanelType
+public enum UIPanelType // Panel
 {
     Login,
+    Matching,
     GameRoom,
     Shop,
     Ranking
@@ -22,6 +23,7 @@ public class UIManager : MonoBehaviour
     public GameObject Panel_GameRoom;
     public GameObject Panel_Shop;
     public GameObject Panel_Ranking;
+    public GameObject Panel_Matching;
 
     private void Awake()
     {
@@ -39,7 +41,8 @@ public class UIManager : MonoBehaviour
             { UIPanelType.Login, Panel_Login },
             { UIPanelType.GameRoom, Panel_GameRoom },
             { UIPanelType.Shop, Panel_Shop },
-            { UIPanelType.Ranking, Panel_Ranking }
+            { UIPanelType.Ranking, Panel_Ranking },
+            { UIPanelType.Matching, Panel_Matching },
         };
 
 
@@ -55,6 +58,10 @@ public class UIManager : MonoBehaviour
         {
             case UIPanelType.Login:
                 Panel_Login.SetActive(true);
+                break;
+
+            case UIPanelType.Matching:
+                Panel_Matching.SetActive(true);
                 break;
 
             case UIPanelType.GameRoom:
