@@ -4,6 +4,16 @@ using TMPro;
 using UnityEngine.Networking;
 using System.Collections;
 
+[System.Serializable]
+public class MatchStatusResponse
+{
+	public int errorCode;
+	public string status;
+	public string roomIP;
+	public int roomPort;
+	public string roomToken;
+}
+
 public class MatchingManager : MonoBehaviour
 {
     [Header("Buttons")]
@@ -33,7 +43,7 @@ public class MatchingManager : MonoBehaviour
 		if (statusCheckCoroutine != null)
 			StopCoroutine(statusCheckCoroutine);
 
-		statusCheckCoroutine = StartCoroutine(CheckMatchingStatusRepeatedly());
+		statusCheckCoroutine = StartCoroutine(CheckMatchingStatus());
 	}
 	void Start() 
     {
@@ -50,7 +60,7 @@ public class MatchingManager : MonoBehaviour
     }
 
     // 외부에서 매칭 완료 시 호출
-    public void OnMatchComplete()
+    public void OnMatchComplete(string ip, int port, string token)
     {
 		isMatchingCompleted = true;
         matchingText.text = "Match Complete !";
@@ -64,6 +74,7 @@ public class MatchingManager : MonoBehaviour
 
 		//  게임 서버 접속 + scene 이동 추가
 		Debug.Log("게임 시작 준비 완료");
+		GameServer.Instance.Connect(ip, port, token);
 	}
 
     void OnExitClicked()
@@ -82,54 +93,41 @@ public class MatchingManager : MonoBehaviour
 
 	private IEnumerator RequestMatching()
 	{
-		yield return PostWithAuth($"{baseUrl}/request",
-			onSuccess: (response) =>
-			{
-				Debug.Log("[매칭 요청 성공] " + response);
-			},
-			onError: (error) =>
-			{
-				Debug.LogError("[매칭 요청 실패] " + error);
-			});
+		yield return HttpRequest($"{baseUrl}/request",
+			(response) => Debug.Log("[매칭 요청 성공] " + response),
+			(error) => Debug.LogError("[매칭 요청 실패] " + error));
 	}
 
 	private IEnumerator CancelMatching()
 	{
-		yield return PostWithAuth($"{baseUrl}/cancel",
-			onSuccess: (response) =>
-			{
-				Debug.Log("[매칭 취소 성공] " + response);
-			},
-			onError: (error) =>
-			{
-				Debug.LogError("[매칭 취소 실패] " + error);
-			});
+		yield return HttpRequest($"{baseUrl}/cancel",
+			(response) => Debug.Log("[매칭 취소 성공] " + response),
+			(error) => Debug.LogError("[매칭 취소 실패] " + error));
 	}
 
-	private IEnumerator CheckMatchingStatusRepeatedly()
+	private IEnumerator CheckMatchingStatus()
 	{
 		while (!isMatchingCompleted)
 		{
-			yield return PostWithAuth($"{baseUrl}/status",
-				onSuccess: (response) =>
-				{
-					Debug.Log("[매칭 상태 확인] " + response);
-					// 간단하게 문자열 포함 여부로 체크
-					if (response.Contains("complete") || response.Contains("SUCCESS"))
+			yield return HttpRequest($"{baseUrl}/status",
+				(response) =>
+                {
+                    Debug.Log("[매칭 상태 확인] " + response);
+                    var matchData = JsonUtility.FromJson<MatchStatusResponse>(response);
+
+					if (matchData.status == "Matched" && matchData.errorCode == 0)
 					{
-						OnMatchComplete();
+						Debug.Log($"[매칭 완료] IP: {matchData.roomIP}, Port: {matchData.roomPort}");
+						OnMatchComplete(matchData.roomIP, matchData.roomPort, matchData.roomToken);
 					}
 				},
-				onError: (error) =>
-				{
-					Debug.LogWarning("[상태 확인 실패] " + error);
-				});
+                (error) => Debug.LogWarning("[상태 확인 실패] " + error));
 
-			yield return new WaitForSeconds(1.5f); // 1.5초 마다
+            yield return new WaitForSeconds(1.5f);
 		}
 	}
 
-	private IEnumerator PostWithAuth(string url, System.Action<string> onSuccess = null, System.Action<string> onError = null)
+	private IEnumerator HttpRequest(string url, System.Action<string> onSuccess = null, System.Action<string> onError = null)
 	{
 		UnityWebRequest request = new UnityWebRequest(url, "POST");
 		request.uploadHandler = new UploadHandlerRaw(new byte[0]);
