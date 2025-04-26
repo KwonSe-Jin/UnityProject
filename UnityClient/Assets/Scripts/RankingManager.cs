@@ -39,7 +39,7 @@ public class RankingManager : MonoBehaviour
 		buttonExit.onClick.AddListener(OnExitClicked);
 		buttonUpdate.onClick.AddListener(OnUpdateClicked);
 
-		StartCoroutine(RefreshRankingFromServer());
+		StartCoroutine(UpdateRankingFromServer());
 	}
 
 	void OnExitClicked()
@@ -49,7 +49,7 @@ public class RankingManager : MonoBehaviour
 
 	void OnUpdateClicked()
 	{
-		StartCoroutine(RefreshRankingFromServer());
+		StartCoroutine(UpdateRankingFromServer());
 	}
 
 	void AddRankingContent(int rank, string nickname, int score)
@@ -70,7 +70,7 @@ public class RankingManager : MonoBehaviour
 		rankings.Clear();
 	}
 
-	IEnumerator RefreshRankingFromServer()
+	IEnumerator UpdateRankingFromServer()
 	{
 		UnityWebRequest request = UnityWebRequest.Get(apiUrl);
 		yield return request.SendWebRequest();
